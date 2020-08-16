@@ -8,9 +8,9 @@ import axios from 'axios'
 
 const App = () => {
   const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas', number: '000-000-00' },
-    { name: 'Adda Bbaa', number: '000-000-00' },
-    { name: 'Baaa aads', number: '000-000-00' }
+    // { name: 'Arto Hellas', number: '000-000-00' },
+    // { name: 'Adda Bbaa', number: '000-000-00' },
+    // { name: 'Baaa aads', number: '000-000-00' }
   ]) 
 
   useEffect(() => {

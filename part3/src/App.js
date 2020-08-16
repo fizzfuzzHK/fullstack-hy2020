@@ -7,19 +7,18 @@ import axios from 'axios'
 
 
 const App = () => {
-  const [ persons, setPersons ] = useState([
-    // { name: 'Arto Hellas', number: '000-000-00' },
-    // { name: 'Adda Bbaa', number: '000-000-00' },
-    // { name: 'Baaa aads', number: '000-000-00' }
-  ]) 
-
+  const [ persons, setPersons ] = useState([]) 
+  const [ personId, setPersonId] = useState(0)
   useEffect(() => {
     axios
-      .get('http://localhost:3002/persons')
-      .then(response => {
+      .get('http://localhost:33067/api/persons')
+      .then(response => {        
         setPersons(response.data)
+        console.log(response.data.length);
+        setPersonId(response.data.length + 1)
       })
   },[])
+
 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
@@ -27,12 +26,15 @@ const App = () => {
   const [ filterOn, setFilterOn ] = useState(true)
 
   
-  
+
   const addPerson = (event) => {
+
+    const URI = 'http://localhost:33067/api/persons'
     event.preventDefault()
     const newObject = {
       name: newName,
-      number: newNumber
+      number: newNumber,
+      //id: personId
     }
 
     if (persons.some(b => b.name === newObject.name)){
@@ -44,10 +46,15 @@ const App = () => {
     }
 
     else {
-      setPersons(persons.concat(newObject))
-  
-      setNewName('')
-      setNewNumber('')
+      axios
+        .post('http://localhost:33067/api/persons', newObject)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+          setNewName('')
+          setNewNumber('')
+          setPersonId(personId + 1)
+        })
+        
     }
   }
   

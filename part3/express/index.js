@@ -34,13 +34,27 @@ let persons =[
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {
-    res.send('<h1>Hello World!</h1>')
+app.get('/info', (req, res) => {
+    const personNum = persons.length
+    const date = new Date()
+    res.send(`Phonebook has info for ${personNum} people ${date}`)
   })
 
 app.get('/api/persons',(req,res) => {
     res.json(persons)
   })
+
+app.get('/api/persons/:id',(req,res) => {
+  const id = Number(req.params.id)  
+  const person = persons.filter(x => x.id ===id)
+  console.log(person);
+  
+  if (person !==[]){
+    res.json(person)
+  }else{
+    res.status(404).end()
+  }
+})
 
 app.post('/a',(req,res) => {
   res.send("ok")
@@ -57,11 +71,12 @@ app.post('/a',(req,res) => {
     const body = req.body
     console.log(body.name);
     
-    // if(!body.content){
-    //   return res.status(403).json({
-    //   error: 'content missing'
-    //   })
-    // }
+    if(!body.content){
+      return res.status(403).json({
+      error: 'content missing'
+      })
+    }
+
     const person = {
       name: body.name,
       number:body.number,

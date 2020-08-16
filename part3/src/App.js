@@ -11,7 +11,7 @@ const App = () => {
   const [ personId, setPersonId] = useState(0)
   useEffect(() => {
     axios
-      .get('http://localhost:33067/api/persons')
+      .get('http://localhost:3003/api/persons')
       .then(response => {        
         setPersons(response.data)
         console.log(response.data.length);
@@ -29,7 +29,6 @@ const App = () => {
 
   const addPerson = (event) => {
 
-    const URI = 'http://localhost:33067/api/persons'
     event.preventDefault()
     const newObject = {
       name: newName,
@@ -47,7 +46,7 @@ const App = () => {
 
     else {
       axios
-        .post('http://localhost:33067/api/persons', newObject)
+        .post('http://localhost:3003/api/persons', newObject)
         .then(response => {
           setPersons(persons.concat(response.data))
           setNewName('')

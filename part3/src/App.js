@@ -15,7 +15,7 @@ const App = () => {
       .then(response => {        
         setPersons(response.data)
         console.log(response.data.length);
-        setPersonId(response.data.length + 1)
+        //setPersonId(response.data.length + 1)
       })
   },[])
 
@@ -36,27 +36,47 @@ const App = () => {
       //id: personId
     }
 
-    if (persons.some(b => b.name === newObject.name)){
-      console.log('error');
+    // if (persons.some(b => b.name === newObject.name)){
+    //   console.log('error');
       
-      return (
-        window.alert(`${newName} is already added to phonebook`)       
-      )
-    }
+    //   return (
+    //     window.alert(`${newName} is already added to phonebook`)       
+    //   )
+    // }
 
-    else {
+    // else {
       axios
         .post('http://localhost:3003/api/persons', newObject)
         .then(response => {
           setPersons(persons.concat(response.data))
           setNewName('')
           setNewNumber('')
-          setPersonId(personId + 1)
+          //setPersonId(personId + 1)
+          console.log(response)
+        })
+        .catch(error => {
+          const {
+            status,
+            statusText
+          } = error.response;
+          console.log(error.response.data);
+          
+          window.alert(statusText)
         })
         
-    }
+    // }
   }
   
+
+const deletePersons = (id)  => {
+  axios
+      .delete(`http://localhost:3003/api/persons/${id}`)
+      .then(response => {
+          console.log(response.data);  
+          setPersons(persons.filter(item => item.id != response.data.id))
+      })
+}
+
   const handleNameOnChange = (event) => {
     setNewName(event.target.value)
     // console.log(newName);    
@@ -96,6 +116,8 @@ const App = () => {
         setFilterOn={setFilterOn}
         filterOn={filterOn}
         persons={persons}
+        setPersons={setPersons}
+        deletePersons={deletePersons}
         personToShow={personToShow}
       />
     </div>

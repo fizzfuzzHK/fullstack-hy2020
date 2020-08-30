@@ -1,7 +1,12 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const cors = require('cors')
+const morgan = require('morgan')
+//admin.initializeApp({ credential: admin.credential.cert(ServiceAccount) });
 
+app.use(cors())
+app.use(morgan("short"))
 let persons =[
     {
       "name": "Arto Hellas",
@@ -25,6 +30,11 @@ let persons =[
     }
   ]
 
+
+
+
+  console.log('open');
+  
   app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -41,7 +51,10 @@ app.get('/info', (req, res) => {
   })
 
 app.get('/api/persons',(req,res) => {
+  Persons.find({}).
+  then(persons => {
     res.json(persons)
+  })  
   })
 
 app.get('/api/persons/:id',(req,res) => {
@@ -71,26 +84,41 @@ app.post('/a',(req,res) => {
     const body = req.body
     console.log(body.name);
     
-    if(!body.content){
-      return res.status(403).json({
-      error: 'content missing'
-      })
-    }
+    
+    // if(!body.content){
+    //   return res.status(405).json({
+    //   error: 'content missing'
+    //   })
+    // }
 
     const person = {
       name: body.name,
       number:body.number,
       id: generateId(),
     }
-
-    persons.concat(person)
+    console.log(person);
+    
+    if(persons.some((v) => v.name  === person.name)){
+      const err = new Error('name is already exists')
+      console.log(err);
+      res.status(400).send({error: err})
+      
+    }
+    else{
+    persons.push(person)
     res.json(person)
+    console.log(persons);
+    }
   })
 
-  app.delete('/api/notes/:id', (req,res)=> {
+  app.delete('/api/persons/:id', (req,res)=> {
       const id = Number(req.params.id)
-      notes = notes.filter(note => note.id !== id)
+      persons = persons.filter(note => note.id !== id)
+      console.log(persons);
+      
       res.status(204).end()
+      console.log(persons);
+      
   })
   
   const PORT = 3003

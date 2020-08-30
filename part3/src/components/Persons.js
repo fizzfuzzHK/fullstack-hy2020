@@ -9,11 +9,12 @@ const Person = ({person}) => {
     )
   }
 
-const Delete = (id)  => {
+const Delete = (id,setPersons,persons)  => {
     axios
-        .delete(`http://localhost:32866/persons/${id}`)
+        .delete(`http://localhost:3003/api/persons/${id}`)
         .then(response => {
             console.log(response.data);  
+            setPersons(persons.concat(response.data))
         })
 }
 
@@ -25,7 +26,7 @@ const Persons = (props) => {
                 <div>{props.persons.map((person) => 
                     <div>
                     <Person key={props.persons.name} person={person}/>
-                    <button onClick={() => Delete(person.id)}>Delete</button>
+                    <button onClick={() => props.deletePersons(person.id)}>Delete</button>
                     </div>
                     )}
                 </div> :
